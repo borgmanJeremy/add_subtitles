@@ -1,0 +1,6 @@
+venv/
+*.swp
+
+*.mkv
+*.vtt
+*.m4v
