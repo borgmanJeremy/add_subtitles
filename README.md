@@ -2,7 +2,7 @@
 
 This script will crawl a directory looking for videos. When it finds a video file it will check if the video has
 an adjacent caption file or embedded captions.  If it has neither, whisper will be used to generate a 
-.vtt caption file.
+.vtt caption file. The video files **are not rencoded** the caption file is adjacent to the media file. 
 
 ## Dependencies
 
@@ -21,7 +21,7 @@ python3 -m pip install openai-whisper
 ```
 
 ## Usage
-````
+```
 usage: main.py [-h] [-d] path
 
 positional arguments:
