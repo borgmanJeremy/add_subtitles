@@ -27,6 +27,7 @@ def check_for_embedded_caption(input_file: str) -> bool:
     subtitle_check_command = f"ffmpeg -i {input_file} -c copy -map 0:s:0 -frames:s 1 -f null - -v 0 -hide_banner"
 
     process = subprocess.run(subtitle_check_command.split())
+    
     if return_code_has_caption(process.returncode):
         return True
     else:
@@ -68,21 +69,27 @@ if __name__ == "__main__":
 
     if args.dryrun:
         for video in video_list:
-            if check_for_caption(video):
-                print(f"{video}, Present")
-            else:
-                print(f"{video}, Missing")
+            try:
+                if check_for_caption(video):
+                    print(f"{video}, Present")
+                else:
+                    print(f"{video}, Missing")
+            except:
+                print(f"Error processing {video}")
     else:
         model = whisper.load_model("base")
         for video in video_list:
-            if not check_for_caption(video):
-                print(f"{video} Missing Caption: Generating...", end="", flush=True)
+            try:
+                if not check_for_caption(video):
+                    print(f"{video} Missing Caption: Generating...", end="", flush=True)
 
-                output_path = os.path.dirname(video)
-                writer = get_writer("vtt", output_path)
-                result = model.transcribe(video)
-                writer(result, video)
+                    output_path = os.path.dirname(video)
+                    writer = get_writer("vtt", output_path)
+                    result = model.transcribe(video)
+                    writer(result, video)
 
-                print("Done")
-            else:
-                print(f"{video} Caption Present")
+                    print("Done")
+                else:
+                    print(f"{video} Caption Present")
+            except:
+                print(f"Error processing {video}")
